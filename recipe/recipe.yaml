@@ -3,7 +3,7 @@ schema_version: 1
 
 context:
   name: pixi-build-ros
-  version: "0.3.2"
+  version: "0.3.3"
   python_min: "3.10"
 
 package:
@@ -12,7 +12,7 @@ package:
 
 source:
   url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/${{ name }}-v${{ version }}.tar.gz
-  sha256: 64666c1e122b53397605a652a1b50467d2f35f66b01a41584e50a126ab1fef86
+  sha256: a1370d3f52ebb97138495ab07aa05b9805d7a11e400e78fca6e707cb93cbc2ff
 
 build:
   number: 0
@@ -37,7 +37,7 @@ requirements:
     - pyyaml
     - py-rattler >=0.15.0, <0.16
     - typing-extensions
-    - py-pixi-build-backend >=0.3.1, <0.4
+    - py-pixi-build-backend >=0.4.1, <0.5
 
 tests:
   - script: ${{ name }} --help
