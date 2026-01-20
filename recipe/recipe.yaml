@@ -3,7 +3,7 @@ schema_version: 1
 
 context:
   name: pixi-build-ros
-  version: "0.3.3"
+  version: "0.3.4"
   python_min: "3.10"
 
 package:
@@ -12,7 +12,7 @@ package:
 
 source:
   url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/${{ name }}-v${{ version }}.tar.gz
-  sha256: a1370d3f52ebb97138495ab07aa05b9805d7a11e400e78fca6e707cb93cbc2ff
+  sha256: 8b63c7745075d0307cc733c6055003f1ce638a94b675c10cc84022523c9b8402
 
 build:
   number: 0
