@@ -3,7 +3,7 @@ schema_version: 1
 
 context:
   name: pixi-build-ros
-  version: "0.3.4"
+  version: "0.3.5"
   python_min: "3.10"
 
 package:
@@ -11,13 +11,13 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/prefix-dev/pixi-build-backends/archive/refs/tags/${{ name }}-v${{ version }}.tar.gz
-  sha256: 8b63c7745075d0307cc733c6055003f1ce638a94b675c10cc84022523c9b8402
+  url: https://github.com/prefix-dev/pixi/archive/refs/tags/${{ name }}-v${{ version }}.tar.gz
+  sha256: d88d1a9dd76993287c2f58d220022b26a2d6b3c0df4ba2a873a371ee0fe4dcb7
 
 build:
   number: 0
   script:
-    - cd backends/pixi-build-ros
+    - cd pixi-build-backends/backends/pixi-build-ros
     - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   noarch: python
   python:
@@ -46,14 +46,14 @@ tests:
         - python ${{ python_min }}.*
 
 about:
-  homepage: https://github.com/prefix-dev/pixi-build-backends
+  homepage: https://github.com/prefix-dev/pixi
   summary: ROS build backend for Pixi
   description: |
     This package provides a ROS build backend for Pixi, allowing the integration of ROS packages into the Pixi build system.
   license: BSD-3-Clause
   license_file: LICENSE
   documentation: https://prefix-dev.github.io/pixi-build-backends
-  repository: https://github.com/prefix-dev/pixi-build-backends
+  repository: https://github.com/prefix-dev/pixi
 
 extra:
   recipe-maintainers:
