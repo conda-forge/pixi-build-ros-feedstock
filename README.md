@@ -3,13 +3,13 @@ About pixi-build-ros-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/pixi-build-ros-feedstock/blob/main/LICENSE.txt)
 
-Home: https://github.com/prefix-dev/pixi-build-backends
+Home: https://github.com/prefix-dev/pixi
 
 Package license: BSD-3-Clause
 
 Summary: ROS build backend for Pixi
 
-Development: https://github.com/prefix-dev/pixi-build-backends
+Development: https://github.com/prefix-dev/pixi
 
 Documentation: https://prefix-dev.github.io/pixi-build-backends
 
@@ -149,6 +149,7 @@ In order to produce a uniquely identifiable distribution:
 Feedstock Maintainers
 =====================
 
+* [@Hofer-Julian](https://github.com/Hofer-Julian/)
 * [@baszalmstra](https://github.com/baszalmstra/)
 * [@ruben-arts](https://github.com/ruben-arts/)
 
