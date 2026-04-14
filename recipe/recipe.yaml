@@ -3,8 +3,8 @@ schema_version: 1
 
 context:
   name: pixi-build-ros
-  version: "0.3.6"
-  python_min: "3.10"
+  crate_name: pixi_build_ros
+  version: "0.4.0"
 
 package:
   name: ${{ name }}
@@ -13,38 +13,55 @@ package:
 source:
   url: https://github.com/prefix-dev/pixi/archive/refs/tags/${{ name }}-v${{ 
     version }}.tar.gz
-  sha256: c5d3e3e10b8ee5c0abcaf274259ceafe4274fe81fe4b1ff3a02ae73654f74782
+  sha256: f7ccff4d19e44c44a787c160d6d892899c8003292396253f56eba55354194d34
 
 build:
   number: 0
   script:
-  - cd pixi-build-backends/backends/pixi-build-ros
-  - ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  noarch: python
-  python:
-    entry_points:
-    - pixi-build-ros = pixi_build_ros.main:main
+    env:
+      CARGO_PROFILE_RELEASE_STRIP: symbols
+      CARGO_PROFILE_RELEASE_LTO: fat
+    content:
+    - if: osx and x86_64
+      then:
+          # use the default linker for osx-64 as we are hitting a bug with the conda-forge linker
+          # https://github.com/rust-lang/rust/issues/140686
+      - unset CARGO_TARGET_X86_64_APPLE_DARWIN_LINKER
+
+    - if: unix
+      then:
+      - export OPENSSL_DIR="$PREFIX"
+    - if: win
+      then:
+      - set CARGO_HOME=C:\.cargo
+      - md %CARGO_HOME%
+    - cargo auditable install --locked --no-track --bins --root ${{ PREFIX }} 
+      --path crates/${{ crate_name }} --no-default-features --features 
+      native-tls
+    - cargo-bundle-licenses --format yaml --output ./THIRDPARTY.yml
+  files:
+  - bin/${{ name }}
+  - bin/${{ name }}.exe
 
 requirements:
+  build:
+  - ${{ compiler("rust") }}
+  - ${{ stdlib("c") }}
+  - cargo-bundle-licenses
+  - cargo-auditable
   host:
-  - python ${{ python_min }}.*
-  - hatchling
-  - pip
+  - pkg-config
+  - if: unix
+    then: openssl
   run:
-  - python >=${{ python_min }}
-  - rosdistro >=1.0.1, <2
-  - catkin_pkg >=1.1.0, <2
-  - pydantic
-  - pyyaml
-  - py-rattler >=0.15.0, <0.16
-  - typing-extensions
-  - py-pixi-build-backend >=0.4.1, <0.5
+  - pixi-build-api-version >=4,<5
 
 tests:
 - script: ${{ name }} --help
-  requirements:
-    run:
-    - python ${{ python_min }}.*
+- package_contents:
+    bin:
+    - ${{ name }}
+
 
 about:
   homepage: https://github.com/prefix-dev/pixi
@@ -52,8 +69,10 @@ about:
   description: |
     This package provides a ROS build backend for Pixi, allowing the integration of ROS packages into the Pixi build system.
   license: BSD-3-Clause
-  license_file: LICENSE
-  documentation: https://prefix-dev.github.io/pixi-build-backends
+  license_file:
+  - LICENSE
+  - THIRDPARTY.yml
+  documentation: https://pixi.prefix.dev/latest/build/backends/pixi-build-ros/
   repository: https://github.com/prefix-dev/pixi
 
 extra:

@@ -13,4 +13,4 @@ openssl:
 rust_compiler:
 - rust
 target_platform:
-- linux-64
+- linux-aarch64
