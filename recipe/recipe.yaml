@@ -69,7 +69,9 @@ about:
   description: |
     This package provides a ROS build backend for Pixi, allowing the integration of ROS packages into the Pixi build system.
   license: BSD-3-Clause
-  license_file: LICENSE
+  license_file:
+  - LICENSE
+  - THIRDPARTY.yml
   documentation: https://pixi.prefix.dev/latest/build/backends/pixi-build-ros/
   repository: https://github.com/prefix-dev/pixi
 
