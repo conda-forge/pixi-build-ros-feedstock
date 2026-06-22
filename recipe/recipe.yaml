@@ -4,19 +4,18 @@ schema_version: 1
 context:
   name: pixi-build-ros
   crate_name: pixi_build_ros
-  version: "0.6.0"
+  version: "0.6.2"
 
 package:
   name: ${{ name }}
   version: ${{ version }}
 
 source:
-  url: https://github.com/prefix-dev/pixi/archive/refs/tags/${{ name }}-v${{ 
-    version }}.tar.gz
-  sha256: a8abfa5d0380ee58850630054717ffafccdcfe43d32311ae60c4810f86573a2e
+  url: https://github.com/prefix-dev/pixi/archive/refs/tags/${{ name }}-v${{ version }}.tar.gz
+  sha256: fc8d1c93ffa157ff0801bbaa3ab3e365187c1f90b72872ec5a803904799d87af
 
 build:
-  number: 1
+  number: 0
   script:
     env:
       # Use cmake to build aws-lc-sys, because conda's CFLAGS inject -O2 which
@@ -25,56 +24,54 @@ build:
       CARGO_PROFILE_RELEASE_STRIP: symbols
       CARGO_PROFILE_RELEASE_LTO: fat
     content:
-    - if: osx and x86_64
-      then:
+      - if: osx and x86_64
+        then:
           # use the default linker for osx-64 as we are hitting a bug with the conda-forge linker
           # https://github.com/rust-lang/rust/issues/140686
-      - unset CARGO_TARGET_X86_64_APPLE_DARWIN_LINKER
+          - unset CARGO_TARGET_X86_64_APPLE_DARWIN_LINKER
 
-    - if: unix
-      then:
-      - export OPENSSL_DIR="$PREFIX"
-    - if: linux
-      then:
+      - if: unix
+        then:
+          - export OPENSSL_DIR="$PREFIX"
+      - if: linux
+        then:
         # aws-lc-sys' cmake builder defaults to the "Unix Makefiles" generator, but the
         # Linux build environment has no make; use the ninja generator instead.
-      - export CMAKE_GENERATOR=Ninja
-    - if: win
-      then:
-      - set CARGO_HOME=C:\.cargo
-      - md %CARGO_HOME%
-    - cargo auditable install --locked --no-track --bins --root ${{ PREFIX }} 
-      --path crates/${{ crate_name }} --no-default-features --features 
-      native-tls
-    - cargo-bundle-licenses --format yaml --output ./THIRDPARTY.yml
+          - export CMAKE_GENERATOR=Ninja
+      - if: win
+        then:
+          - set CARGO_HOME=C:\.cargo
+          - md %CARGO_HOME%
+      - cargo auditable install --locked --no-track --bins --root ${{ PREFIX }} --path crates/${{ crate_name }} --no-default-features --features native-tls
+      - cargo-bundle-licenses --format yaml --output ./THIRDPARTY.yml
   files:
-  - bin/${{ name }}
-  - bin/${{ name }}.exe
+    - bin/${{ name }}
+    - bin/${{ name }}.exe
 
 requirements:
   build:
-  - ${{ compiler("rust") }}
-  - ${{ stdlib("c") }}
+    - ${{ compiler("rust") }}
+    - ${{ stdlib("c") }}
   # for building aws-lc-sys
-  - cmake
-  - ninja
-  - cargo-bundle-licenses
-  - cargo-auditable
+    - cmake
+    - ninja
+    - cargo-bundle-licenses
+    - cargo-auditable
   host:
-  - if: target_platform != 'win-arm64'
-    then: pkg-config
-  - if: unix
-    then: openssl
+    - if: target_platform != 'win-arm64'
+      then: pkg-config
+    - if: unix
+      then: openssl
   run:
-  - pixi-build-api-version >=5,<6
+    - pixi-build-api-version >=5,<6
 
 tests:
-- script:
-  - if: build_platform == target_platform
-    then: ${{ name }} --help
-- package_contents:
-    bin:
-    - ${{ name }}
+  - script:
+      - if: build_platform == target_platform
+        then: ${{ name }} --help
+  - package_contents:
+      bin:
+        - ${{ name }}
 
 
 about:
@@ -84,13 +81,13 @@ about:
     This package provides a ROS build backend for Pixi, allowing the integration of ROS packages into the Pixi build system.
   license: BSD-3-Clause
   license_file:
-  - LICENSE
-  - THIRDPARTY.yml
+    - LICENSE
+    - THIRDPARTY.yml
   documentation: https://pixi.prefix.dev/latest/build/backends/pixi-build-ros/
   repository: https://github.com/prefix-dev/pixi
 
 extra:
   recipe-maintainers:
-  - Hofer-Julian
-  - baszalmstra
-  - ruben-arts
+    - Hofer-Julian
+    - baszalmstra
+    - ruben-arts
